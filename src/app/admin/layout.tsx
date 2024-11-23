@@ -37,16 +37,6 @@ const navItems: NavItem[] = [
     href: "/admin/employees",
     icon: <Users className="w-5 h-5" />
   },
-  {
-    label: "Clients",
-    href: "/admin/clients",
-    icon: <Users className="w-5 h-5" />
-  },
-  {
-    label: "Analytics",
-    href: "/admin/analytics",
-    icon: <BarChart3 className="w-5 h-5" />
-  }
 ];
 
 export default function AdminLayout({

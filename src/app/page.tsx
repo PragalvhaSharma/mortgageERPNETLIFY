@@ -5,10 +5,10 @@ import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const USERS = {
-  client: {
-    username: "client123",
-    password: "client123",
-    role: "client"
+  employee: {
+    username: "employee123",
+    password: "employee123",
+    role: "employee"
   },
   admin: {
     username: "admin123",
@@ -55,7 +55,7 @@ export default function LoginPage() {
     if (user.role === "admin") {
       router.push("/admin");
     } else {
-      router.push("/client");
+      router.push("/employee");
     }
   };
 
