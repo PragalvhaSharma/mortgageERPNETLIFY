@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { UserPlus } from "lucide-react";
+import { UserPlus, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "./components/data-table";
 import { columns, Employee } from "./components/columns";
 import { EmployeeDialog } from "./components/employee-dialog";
+import { ChatDialog } from "./components/chat-dialog";
+import { Row } from "@tanstack/react-table";
 
 const mockEmployees: Employee[] = [
   {
@@ -74,6 +76,8 @@ export default function EmployeesPage() {
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | undefined>();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMode, setDialogMode] = useState<"create" | "edit">("create");
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatEmployee, setChatEmployee] = useState<Employee | undefined>();
 
   const handleEmployeeClick = (employee: Employee) => {
     setSelectedEmployee(employee);
@@ -86,6 +90,30 @@ export default function EmployeesPage() {
     setSelectedEmployee(undefined);
     setDialogOpen(true);
   };
+
+  const handleChatClick = (employee: Employee, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setChatEmployee(employee);
+    setChatOpen(true);
+  };
+
+  const tableColumns = [
+    ...columns.filter(col => col.id !== 'actions'),
+    {
+      id: 'chat-actions',
+      cell: ({ row }: { row: Row<Employee> }) => (
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={(e) => handleChatClick(row.original, e)}
+          className="h-8 w-8 hover:bg-primary/10 transition-colors"
+          aria-label={`Chat with ${row.original.name}`}
+        >
+          <MessageCircle className="h-4 w-4" />
+        </Button>
+      ),
+    }
+  ];
 
   return (
     <div className="space-y-6">
@@ -107,7 +135,7 @@ export default function EmployeesPage() {
       </div>
 
       <DataTable
-        columns={columns}
+        columns={tableColumns}
         data={employees}
         onRowClick={handleEmployeeClick}
       />
@@ -117,6 +145,12 @@ export default function EmployeesPage() {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         mode={dialogMode}
+      />
+
+      <ChatDialog
+        employee={chatEmployee}
+        open={chatOpen}
+        onOpenChange={setChatOpen}
       />
     </div>
   );
