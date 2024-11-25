@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import Link from "next/link";
 import { 
   BarChart3, 
   FileText, 
@@ -45,18 +44,19 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth < 768) {
-        setIsDrawerOpen(false);
+      setIsMobile(window.innerWidth < 1024);
+      if (window.innerWidth < 1024) {
+        setIsOpen(false);
       } else {
-        setIsDrawerOpen(true);
+        setIsOpen(true);
       }
     };
 
@@ -70,81 +70,90 @@ export default function AdminLayout({
     router.push("/");
   };
 
+  const onClose = () => setIsOpen(false);
+
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* Mobile Overlay */}
-      {isMobile && isDrawerOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-20"
-          onClick={() => setIsDrawerOpen(false)}
-        />
-      )}
+      {/* Overlay */}
+      <div 
+        className={`fixed inset-0 bg-black transition-opacity duration-300 ease-in-out lg:hidden ${
+          isOpen ? 'opacity-50 z-40' : 'opacity-0 pointer-events-none -z-10'
+        }`}
+        onClick={onClose}
+      />
 
       {/* Drawer */}
-      <aside 
-        className={`
-          fixed md:static bg-white shadow-lg z-30
-          transition-all duration-300 ease-in-out
-          ${isDrawerOpen ? 'w-64 translate-x-0' : 'w-0 -translate-x-full md:w-20 md:translate-x-0'}
-        `}
+      <div 
+        className={`fixed lg:static min-h-screen bg-white shadow-lg 
+          transform transition-transform duration-300 ease-in-out z-50
+          flex flex-col
+          ${isCollapsed ? 'w-20' : 'w-64'} 
+          ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
-        <div className="flex flex-col h-full">
-          <div className="p-6 flex items-center justify-between">
-            <h1 className={`text-xl font-bold text-gray-900 ${!isDrawerOpen && 'md:hidden'}`}>
-              Mortgage Admin
-            </h1>
-            {isMobile && (
-              <button onClick={() => setIsDrawerOpen(false)}>
-                <X className="w-6 h-6" />
+        {/* Header */}
+        <div className="p-6 border-b flex justify-between items-center">
+          <div className="flex items-center">
+            <button 
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
+            >
+              <Menu className={`w-6 h-6 text-gray-500 transition-transform duration-300 ${
+                isCollapsed ? 'rotate-180' : ''
+              }`} />
+            </button>
+            {!isCollapsed && (
+              <button 
+                onClick={onClose}
+                className="lg:hidden p-2 hover:bg-gray-100 rounded-full ml-2 transition-colors duration-200"
+              >
+                <X className="w-6 h-6 text-gray-500" />
               </button>
             )}
           </div>
-          
-          <nav className="flex-1 mt-2">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`
-                  flex items-center gap-3 px-6 py-3 text-gray-700 hover:bg-gray-50 transition-colors
-                  ${pathname === item.href ? 'bg-gray-100 border-r-4 border-blue-600' : ''}
-                `}
-                aria-label={item.label}
-              >
-                {item.icon}
-                <span className={!isDrawerOpen ? 'md:hidden' : ''}>
-                  {item.label}
-                </span>
-              </Link>
-            ))}
-          </nav>
-
-          <div className="p-4 border-t">
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 w-full px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-              aria-label="Logout from admin panel"
-            >
-              <LogOut className="w-5 h-5" />
-              <span className={!isDrawerOpen ? 'md:hidden' : ''}>Logout</span>
-            </button>
-          </div>
         </div>
-      </aside>
+
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto p-4">
+          <ul className="space-y-2">
+            {navItems.map((item) => (
+              <li key={item.href}>
+                <button
+                  onClick={() => router.push(item.href)}
+                  className={`w-full flex items-center p-3 rounded-lg transition-colors duration-200
+                    hover:bg-blue-50 text-gray-700 hover:text-blue-600
+                    ${pathname === item.href ? 'bg-blue-50 text-blue-600' : ''}
+                    ${!isCollapsed ? 'space-x-3' : 'justify-center'}`}
+                  title={isCollapsed ? item.label : ''}
+                >
+                  {item.icon}
+                  {!isCollapsed && (
+                    <span className="transition-opacity duration-300">{item.label}</span>
+                  )}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* Logout Button */}
+        <div className="p-4 border-t">
+          <button
+            onClick={handleLogout}
+            className={`w-full flex items-center p-3 rounded-lg transition-colors duration-200
+              text-red-600 hover:bg-red-50
+              ${!isCollapsed ? 'space-x-3' : 'justify-center'}`}
+            title={isCollapsed ? 'Logout' : ''}
+          >
+            <LogOut className="w-5 h-5" />
+            {!isCollapsed && (
+              <span className="transition-opacity duration-300">Logout</span>
+            )}
+          </button>
+        </div>
+      </div>
 
       {/* Main Content */}
-      <div className="flex-1">
-        <header className="bg-white shadow-sm">
-          <div className="flex items-center px-6 py-4">
-            <button
-              onClick={() => setIsDrawerOpen(!isDrawerOpen)}
-              className="p-2 rounded-lg hover:bg-gray-100"
-              aria-label="Toggle menu"
-            >
-              <Menu className="w-6 h-6" />
-            </button>
-          </div>
-        </header>
+      <div className="flex-1 overflow-auto min-h-screen bg-gray-50">
         <main className="p-6">
           {children}
         </main>

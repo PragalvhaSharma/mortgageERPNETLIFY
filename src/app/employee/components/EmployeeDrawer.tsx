@@ -8,6 +8,7 @@ import {
   Bars3Icon,
   HomeIcon,
 } from '@heroicons/react/24/outline'
+import { LogOut } from 'lucide-react'
 
 interface DrawerProps {
   isOpen: boolean
@@ -31,6 +32,11 @@ export default function EmployeeDrawer({ isOpen, onClose, children }: DrawerProp
       onClose()
     }
   }
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("user");
+    router.push("/");
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -94,6 +100,22 @@ export default function EmployeeDrawer({ isOpen, onClose, children }: DrawerProp
             ))}
           </ul>
         </nav>
+
+        {/* Add Logout Button */}
+        <div className="p-4 border-t">
+          <button
+            onClick={handleLogout}
+            className={`w-full flex items-center p-3 rounded-lg transition-colors duration-200
+              text-red-600 hover:bg-red-50
+              ${!isCollapsed ? 'space-x-3' : 'justify-center'}`}
+            title={isCollapsed ? 'Logout' : ''}
+          >
+            <LogOut className="w-6 h-6" />
+            {!isCollapsed && (
+              <span className="transition-opacity duration-300">Logout</span>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Main content area */}
