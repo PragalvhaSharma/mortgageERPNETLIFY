@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import {
   AreaChart,
   Area,
@@ -39,13 +38,6 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from "@/components/ui/table";
 
 const monthlyData = [
   { name: "Jan", value: 45000 },
@@ -603,7 +595,6 @@ export default function DashboardPage() {
                   className="flex items-center space-x-4 p-4 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   <Avatar
-                    fallback={member.name.charAt(0)}
                     className="w-12 h-12 border-2 border-white shadow-sm"
                   >
                     <img

@@ -1,6 +1,6 @@
 'use client'
 
-import { Client } from '@/types/client'
+import { Client } from '../types'
 
 interface QuickViewProps {
   formData: Client

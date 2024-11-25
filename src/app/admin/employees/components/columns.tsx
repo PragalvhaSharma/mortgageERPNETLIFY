@@ -24,6 +24,12 @@ export type Employee = {
   phone?: string;
   deals?: number;
   department?: string;
+  address?: {
+    street?: string;
+    city?: string;
+    state?: string;
+    zipCode?: string;
+  };
   performance?: {
     closedDeals: number;
     activeDeals: number;

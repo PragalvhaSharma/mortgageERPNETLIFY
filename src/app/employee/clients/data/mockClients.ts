@@ -1,4 +1,4 @@
-import { Client } from '@/types/client'
+import { Client } from '../components/types'
 
 export const mockClients: Client[] = [
   {

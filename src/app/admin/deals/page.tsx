@@ -503,7 +503,7 @@ export default function DealsPage() {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [showSignatureModal, setShowSignatureModal] = useState(false);
   const [dealToApprove, setDealToApprove] = useState<Deal | null>(null);
-  const signatureRef = useRef<SignatureCanvas>(null);
+  const signatureRef = useRef<InstanceType<typeof SignatureCanvas> | null>(null);
   const [deals, setDeals] = useState<Deal[]>(sampleDeals);
   const [rejectReason, setRejectReason] = useState("");
   const [showReasonModal, setShowReasonModal] = useState(false);
@@ -697,8 +697,8 @@ export default function DealsPage() {
       dealToApprove.id,
       'approved',
       undefined,
-      tempSignature,
-      finalBankRep
+      tempSignature !== null ? tempSignature : undefined,
+      finalBankRep !== null ? finalBankRep : undefined
     );
     setTempSignature(null);
 
@@ -945,9 +945,9 @@ export default function DealsPage() {
                           ${deal.loanAmount.toLocaleString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <Badge variant={
+                          <Badge variant={  
                             deal.priority === 'high' ? 'destructive' :
-                            deal.priority === 'medium' ? 'warning' :
+                            deal.priority === 'medium' ? 'secondary' :
                             'secondary'
                           }>
                             {deal.priority}
@@ -955,9 +955,9 @@ export default function DealsPage() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <Badge variant={
-                            deal.adminReview.status === 'approved' ? 'success' :
+                            deal.adminReview.status === 'approved' ? 'default' :
                             deal.adminReview.status === 'rejected' ? 'destructive' :
-                            deal.adminReview.status === 'on_hold' ? 'warning' :
+                            deal.adminReview.status === 'on_hold' ? 'secondary' :
                             'secondary'
                           }>
                             {deal.adminReview.status.replace('_', ' ')}

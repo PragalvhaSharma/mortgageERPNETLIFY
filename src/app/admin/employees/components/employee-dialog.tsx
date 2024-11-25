@@ -39,7 +39,7 @@ const employeeSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   role: z.enum(["Broker", "Loan Officer", "Processor", "Administrator"]),
-  status: z.enum(["Active", "Inactive"]),
+  status: z.enum(["Active", "Pending", "Inactive"]),
   phone: z.string().optional(),
   password: z.string().min(6, "Password must be at least 6 characters"),
   department: z.string().optional(),

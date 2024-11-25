@@ -1,4 +1,4 @@
-import { Client } from '@/types/client'
+import { Client } from '../components/types'
 import { mockClients } from './mockClients'
 import { toast } from 'react-hot-toast'
 

@@ -5,7 +5,7 @@ import EmployeeDrawer from '../components/EmployeeDrawer'
 import { FaSearch, FaPlus, FaEye, FaEdit, FaTrash } from 'react-icons/fa'
 import ClientModal from './components/ClientModal'
 import { Toaster, toast } from 'react-hot-toast'
-import { Client } from '@/types/client'
+import { Client } from './components/types'
 import { getInitialClients, updateMockClients } from './data/mockDataOperations'
 import { v4 as uuidv4 } from 'uuid'
 
